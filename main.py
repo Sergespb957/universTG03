@@ -29,14 +29,14 @@ class Form(StatesGroup):
 
 
 def init_db():
-    conn = sqlite3.connect('user_data.db')
+    conn = sqlite3.connect('school_data.db')
     cur = conn.cursor()
     cur.execute('''
-    CREATE TABLE IF NOT EXISTS users(
+    CREATE TABLE IF NOT EXISTS students (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     age INTEGER NOT NULL,
-    grade INTEGER NOT NULL)
+    grade TEXT NOT NULL)
     ''')
     conn.commit()
     conn.close()
@@ -63,12 +63,12 @@ async def age(message: Message, state: FSMContext):
     await state.update_data(age=message.text)
     await message.answer("В каком ты классе?")
     await state.set_state(Form.grade)
-    user_data = await state.get_data()
+    school_data = await state.get_data()
 
-    conn = sqlite3.connect('user_data.db')
+    conn = sqlite3.connect('school_data.db')
     cur = conn.cursor()
     cur.execute('''
-    INSERT INTO users (name, age, grade) VALUES (?, ?, ?)''', (user_data['name'], user_data['age'], user_data['grade']))
+    INSERT INTO students  (name, age, grade) VALUES (?, ?, ?)''', (school_data['name'], school_data['age'], school_data['grade']))
     conn.commit()
     conn.close()
 
